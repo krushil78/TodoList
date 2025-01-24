@@ -13,7 +13,6 @@ Currently, two official plugins are available:
 - User authentication (Sign up, Log in, Log out)
 - Create, Read, Update, Delete (CRUD) tasks
 - Responsive UI
-
 ## Folder Structure
 - `frontend/`: React application
 - `backend/`: Node.js & Express application

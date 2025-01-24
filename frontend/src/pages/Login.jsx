@@ -31,6 +31,7 @@ const Login = () => {
   try {
     await login(credentials);
     
+  // eslint-disable-next-line no-unused-vars
   } catch (error) {
     setError("login failed. Please try again.");
   }

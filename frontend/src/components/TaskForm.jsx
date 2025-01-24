@@ -2,18 +2,23 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext"; // Adjust the path as needed
 import axios from "axios";
 
-const TaskForm = ({ onTaskSubmit, existingTask }) => {
+// eslint-disable-next-line react/prop-types
+const TaskForm = ({ handleTaskSubmit , editingTask }) => {
   const { token } = useAuth(); // Use the token directly from context
-  const [task, setTask] = useState({ title: "", description: "" });
+  const [task, setTask] = useState({
+    title: "",
+    description: "",
+    dueDate: "",
+    status: "pending",
+  });
   const [error, setError] = useState(null);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  // Populate form with existing task data for editing
   useEffect(() => {
-    if (existingTask) {
-      setTask(existingTask);
+    if (editingTask) {
+      setTask(editingTask);
     }
-  }, [existingTask]);
+  }, [editingTask]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,15 +31,13 @@ const TaskForm = ({ onTaskSubmit, existingTask }) => {
       const headers = { Authorization: `Bearer ${token}` };
 
       if (task._id) {
-        // Update existing task
         await axios.put(`${backendUrl}tasks/${task._id}`, task, { headers });
       } else {
-        // Create new task
         await axios.post(`${backendUrl}tasks`, task, { headers });
       }
 
-      onTaskSubmit(); // Notify parent to refresh the task list
-      setTask({ title: "", description: "" }); // Reset form
+      handleTaskSubmit(); // Notify parent to refresh the task list
+      setTask({ title: "", description: "", dueDate: "", status: "pending" });
     } catch (err) {
       setError(err.response?.data?.message || "Failed to submit task");
     }
@@ -44,10 +47,9 @@ const TaskForm = ({ onTaskSubmit, existingTask }) => {
     try {
       const headers = { Authorization: `Bearer ${token}` };
       if (task._id) {
-        // Delete the task
         await axios.delete(`${backendUrl}tasks/${task._id}`, { headers });
-        onTaskSubmit(); // Notify parent to refresh the task list
-        setTask({ title: "", description: "" }); // Reset form
+        handleTaskSubmit();
+        setTask({ title: "", description: "", dueDate: "", status: "pending" });
       }
     } catch (err) {
       setError(err.response?.data?.message || "Failed to delete task");
@@ -55,9 +57,10 @@ const TaskForm = ({ onTaskSubmit, existingTask }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className=" shadow bg-gray-800 p-4 rounded-lg  w-full">
+    <form onSubmit={handleSubmit} className="shadow bg-gray-800 p-4 rounded-lg w-full">
       <h3 className="mb-4 text-lg font-bold">{task._id ? "Edit Task" : "New Task"}</h3>
       {error && <div className="mb-4 text-red-500">{error}</div>}
+      <div className="w-full">
       <input
         type="text"
         name="title"
@@ -74,8 +77,27 @@ const TaskForm = ({ onTaskSubmit, existingTask }) => {
         className="w-full p-2 mb-4 border rounded text-gray-600"
         rows="4"
       />
+      </div>
+      <div className="flex gap-4 grid  sm:grid-cols-1 lg:grid-cols-2">
+      <input
+        type="date"
+        name="dueDate"
+        value={task.dueDate}
+        onChange={handleChange}
+        className="w-full p-2 mb-4 border rounded text-gray-600"
+      />
+      <select
+        name="status"
+        value={task.status}
+        onChange={handleChange}
+        className="w-full p-2 mb-4 border rounded text-gray-600"
+      >
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+      </select>
+      </div>
       <div className="flex gap-2">
-        <button type="submit" className="w-full py-2 text-white bg-green-500 rounded  rounded-lg bg-purple-600 hover:bg-purple-500 ">
+        <button type="submit" className="w-full py-2 text-white bg-purple-600 rounded">
           {task._id ? "Update Task" : "Create Task"}
         </button>
         {task._id && (

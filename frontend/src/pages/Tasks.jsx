@@ -32,7 +32,7 @@ const Tasks = () => {
           Logout
         </button>
       </div>
-      <TaskForm existingTask={editingTask} onTaskSubmit={handleTaskSubmit} />
+      <TaskForm editingTask={editingTask} handleTaskSubmit={handleTaskSubmit} />
       <TaskList key={refreshKey} onEditTask={handleEditTask} />
     </div>
   );

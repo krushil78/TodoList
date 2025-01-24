@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import logo from '../assets/fevicon.svg';
 
+
+
 const Signup = () => {
   const { signup } = useAuth();
   const navigate = useNavigate();
