@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import { jwtDecode } from "jwt-decode";
 
 import { createContext, useContext, useEffect, useState } from "react";
@@ -16,16 +17,33 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const [backendUrl , setBackendUrl] = useState(null)
+
   const navigate = useNavigate();
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const {data} = await axios.get('http://localhost:5000/api/config');
+         setBackendUrl(data.backendUrl);
+        console.log(data.backendUrl);
+      } catch (error) {
+        console.error('Error fetching backend URL:', error);
+      }
+    };
+    fetchConfig();
+  }, []);
 
   useEffect(() => {
     if (token) {
       const decodedToken = jwtDecode(token);
       setUser(decodedToken.username); // or whatever field you want from the token
     }
-  }, [token]);
+  }, [backendUrl,  token]);
  
+
+
 
 
   const login = async (credentials) => {
@@ -56,7 +74,7 @@ export const AuthProvider = ({ children }) => {
       navigate("/login");
     } catch (error) {
       console.error("Signup failed:", error.response?.data?.message || "Unknown error");
-      throw error; // Optional: Re-throw error to handle it in the component
+      throw error; 
     }
   };
 
@@ -74,7 +92,7 @@ export const AuthProvider = ({ children }) => {
   };
   
 
-  const value = { user, token, login, logout ,signup };
+  const value = { user, token, login, logout ,signup , backendUrl};
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

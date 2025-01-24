@@ -20,7 +20,7 @@ const Tasks = () => {
   };
 
   return (
-    <div className="px-10  py-10   h-screen bg-gradient-to-br from-gray-800 via-black to-gray-800 text-white  ">
+    <div className="px-10  py-10   h-full bg-gradient-to-br from-gray-800 via-black to-gray-800 text-white  ">
 
 <div className="flex justify-center mb-4  ">
     <img src={logo} alt="Logo" className="h-24 w-auto" />

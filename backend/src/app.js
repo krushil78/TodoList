@@ -15,4 +15,13 @@ app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
+
+app.get('/api/config', (req, res) => {
+
+    res.json({ backendUrl: process.env.BACKEND_URL });
+  });
+  
+  
+
+
 module.exports = app;

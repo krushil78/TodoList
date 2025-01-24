@@ -4,7 +4,7 @@ import axios from "axios";
 
 // eslint-disable-next-line react/prop-types
 const TaskForm = ({ handleTaskSubmit , editingTask }) => {
-  const { token } = useAuth(); // Use the token directly from context
+  const { token , backendUrl  } = useAuth(); // Use the token directly from context
   const [task, setTask] = useState({
     title: "",
     description: "",
@@ -12,7 +12,7 @@ const TaskForm = ({ handleTaskSubmit , editingTask }) => {
     status: "pending",
   });
   const [error, setError] = useState(null);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 
   useEffect(() => {
     if (editingTask) {

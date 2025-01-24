@@ -5,9 +5,10 @@ import { useAuth } from "../context/AuthContext";
 
 // eslint-disable-next-line react/prop-types
 const TaskList = ({ onEditTask }) => {
-  const { token } = useAuth();
+  const { token , backendUrl } = useAuth();
   const [tasks, setTasks] = useState([]);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+ 
+
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -39,7 +40,7 @@ const TaskList = ({ onEditTask }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-2">
+    <div className="grid grid-cols-1 sm:grid-cols-2   lg:grid-cols-3 gap-4 my-2">
       {tasks.map((task) => (
         <div key={task._id} className="p-4 mb-4 bg-gray-800 rounded shadow">
           <h3 className="font-bold">Task : {task.title}</h3>
